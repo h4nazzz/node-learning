@@ -1,49 +1,33 @@
-const http =require('http');
-const server = http.createServer((req,res)=>{
-    if(req.url === '/about'){
-        res.write('Hello World'); 
-        res.end();
-    }  
-    if(req.url == '/'){
-        res.writeHead(200,{"content-type":"text/html"});
-        res.end(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>About Page</title>
-            <style>
-                body {
-                    font-family: Arial;
-                    background-color: #f4f4f4;
-                    text-align: center;
-                    padding-top: 50px;
-                }
-                h1 {
-                    color: #333;
-                }
-                p {
-                    color: #555;
-                    font-size: 18px;
-                }
-                .box {
-                    background: white;
-                    padding: 20px;
-                    margin: auto;
-                    width: 300px;
-                    border-radius: 10px;
-                    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-                }
-            </style>
-        </head>
-        <body>
-            <div class="box">
-                <h1>Welcome to the About Page</h1>
-                <p>This is the About Page</p>
-                <p>Mazin is GOAT</p>
-            </div>
-        </body>
-        </html>
+const express = require('express');
+const app =express();
+const {users} = require('./fun.js');
+
+app.get('/',(req,res)=>{
+    res.send(`<h1>Welcome to the Home Page</h1>
+    <p>This is the Home Page</p>
+    <p>Mazinka is GOAT</p>
+    <a href="/api">Go to API</a>
     `);
-    }
 });
-server.listen(3000);
+app.get('/api',(req,res)=>{
+    const newPro=users.map((user)=>{
+        const {name,age}=user;
+        return {name,age};
+    });
+    res.send(`${newPro.map((user)=>`<p>${user.name}: ${user.age}</p>`).join('')}<a href="/api/1">Go back to 1</a>`);
+});
+
+app.get('/api/:id',(req,res)=>{
+    const {id} = req.params;
+    const user = users.find((user)=>user.name === id);
+     if(!user){ return res.status(404).send('User not found');}
+    res.send(`<h1>Welcome to the API Page</h1>
+    <p>This is the API Page</p>
+    <p>Name: ${user.name}</p>
+    <p>Age: ${user.age}</p>
+    `);
+});
+
+app.listen(3000,()=>{
+    console.log("server is listening");
+})

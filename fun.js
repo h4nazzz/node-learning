@@ -1,8 +1,12 @@
-const a=5;
-const b=10;
+const users=[{
+        name:"sanu",
+        age:20,
+        city:"kozhikode"
+    },
+    {
+    name:"mazinka",
+    age:20,
+    city:"kozhikode"    
+}]
 
-function add(){
-    console.log(`the sum is ${a+b}`);
-}
-
-module.exports = add() ;
+module.exports = {users};
